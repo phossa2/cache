@@ -12,16 +12,21 @@
  */
 /*# declare(strict_types=1); */
 
-namespace Phossa2\Cache\Interfaces;
+namespace Phossa2\Cache\Exception;
+
+use Psr\Cache\InvalidArgumentException as PsrInvalidArgumentException;
 
 /**
- * SampleInterface
+ * InvalidArgumentException for Phossa2\Cache
  *
  * @package Phossa2\Cache
  * @author  Hong Zhang <phossa@126.com>
+ * @see     ExceptionInterface
+ * @see     \InvalidArgumentException
+ * @see     \Psr\Cache\InvalidArgumentException
  * @version 2.0.0
  * @since   2.0.0 added
  */
-interface SampleInterface
+class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface, PsrInvalidArgumentException
 {
 }

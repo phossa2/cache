@@ -14,6 +14,8 @@
 
 namespace Phossa2\Cache\Exception;
 
+use Psr\Cache\CacheException;
+
 /**
  * LogicException for Phossa2\Cache
  *
@@ -21,9 +23,10 @@ namespace Phossa2\Cache\Exception;
  * @author  Hong Zhang <phossa@126.com>
  * @see     ExceptionInterface
  * @see     \LogicException
+ * @see     CacheException
  * @version 2.0.0
  * @since   2.0.0 added
  */
-class LogicException extends \LogicException implements ExceptionInterface
+class LogicException extends \LogicException implements ExceptionInterface, CacheException
 {
 }

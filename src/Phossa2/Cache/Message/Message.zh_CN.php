@@ -25,5 +25,5 @@ use Phossa2\Cache\Message\Message;
  * @since   2.0.0 added
  */
 return [
-    Message::PACKAGE_CONST => '',
+    Message::CACHE_INVALID_KEY => '缓存钥匙  "%s" 格式错误',
 ];
