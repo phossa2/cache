@@ -32,10 +32,16 @@ class Message extends BaseMessage
      */
     const CACHE_INVALID_KEY = 1608121019;
 
+    /*
+     * Bypass cache
+     */
+    const CACHE_EXT_BYPASS = 1608121020;
+
     /**
      * {@inheritDoc}
      */
     protected static $messages = [
         self::CACHE_INVALID_KEY => 'Invalide cache key "%s"',
+        self::CACHE_EXT_BYPASS => 'Bypass cache',
     ];
 }

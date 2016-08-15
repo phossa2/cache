@@ -30,14 +30,12 @@ use Phossa2\Cache\Interfaces\CacheItemExtendedInterface;
  */
 trait CacheItemAwareTrait
 {
-    use DriverAwareTrait;
-
     /**
      * item factory method, signatures as follows
      *
      *     function(
      *          string $key,
-     *          DriverInterface $driver,
+     *          CachePool $driver,
      *          array $properties = []
      *     ): CacheItemInterface
      *
@@ -98,10 +96,10 @@ trait CacheItemAwareTrait
     {
         if (is_callable($this->item_factory)) {
             $func = $this->item_factory;
-            $item = $func($key, $this->getDriver());
+            $item = $func($key, $this);
 
         } else {
-            $item = new CacheItem($key, $this->getDriver());
+            $item = new CacheItem($key, $this);
         }
 
         return $item;

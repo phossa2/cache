@@ -71,6 +71,16 @@ interface DriverInterface
     public function saveDeferred(CacheItemInterface $item)/*# : bool */;
 
     /**
+     * Delete item from the pool. return false on error
+     *
+     * @param  CacheItemInterface $item
+     * @return bool
+     * @access public
+     * @api
+     */
+    public function delete(CacheItemInterface $item)/*# : bool */;
+
+    /**
      * Commit deferred to the pool. return false on error.
      *
      * @return bool
@@ -80,16 +90,6 @@ interface DriverInterface
     public function commit()/*# : bool */;
 
     /**
-     * Delete item from the pool. return false on error
-     *
-     * @param  string $key the key
-     * @return bool
-     * @access public
-     * @api
-     */
-    public function delete(/*# string */ $key)/*# : bool */;
-
-    /**
      * Clear the entire cache pool. return false on error
      *
      * @return bool
@@ -97,16 +97,6 @@ interface DriverInterface
      * @api
      */
     public function clear()/*# : bool */;
-
-    /**
-     * Purge items older than this seconds
-     *
-     * @param  int $maxlife max life in seconds, 0 for clear all
-     * @return bool
-     * @access public
-     * @api
-     */
-    public function purge(/*# int */ $maxlife)/*# : bool */;
 
     /**
      * Ping driver, FALSE means driver failed

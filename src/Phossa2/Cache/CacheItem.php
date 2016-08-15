@@ -14,11 +14,7 @@
 
 namespace Phossa2\Cache;
 
-use Psr\Cache\CacheItemPoolInterface;
-use Phossa2\Event\EventCapableAbstract;
-use Phossa2\Cache\Traits\DriverAwareTrait;
-use Phossa2\Cache\Interfaces\DriverInterface;
-use Phossa2\Cache\Interfaces\DriverAwareInterface;
+use Phossa2\Shared\Base\ObjectAbstract;
 use Phossa2\Cache\Interfaces\CacheItemExtendedInterface;
 
 /**
@@ -26,20 +22,17 @@ use Phossa2\Cache\Interfaces\CacheItemExtendedInterface;
  *
  * @package Phossa2\Cache
  * @author  Hong Zhang <phossa@126.com>
- * @see     EventCapableAbstract
+ * @see     ObjectAbstract
  * @see     CacheItemExtendedInterface
- * @see     DriverAwareInterface
  * @version 2.0.0
  * @since   2.0.0 added
  */
-class CacheItem extends EventCapableAbstract implements CacheItemExtendedInterface, DriverAwareInterface
+class CacheItem extends ObjectAbstract implements CacheItemExtendedInterface
 {
-    use DriverAwareTrait;
-
     /**
      * cache pool
      *
-     * @var    CacheItemPoolInterface
+     * @var    CachePool
      * @access protected
      */
     protected $pool;
@@ -53,7 +46,7 @@ class CacheItem extends EventCapableAbstract implements CacheItemExtendedInterfa
     protected $key;
 
     /**
-     * Marker for cache hit
+     * flag for cache hit
      *
      * @var    bool
      * @access protected
@@ -61,7 +54,7 @@ class CacheItem extends EventCapableAbstract implements CacheItemExtendedInterfa
     protected $hit;
 
     /**
-     * marker for got value already
+     * flag for got value already
      *
      * @var    bool
      * @access protected
@@ -77,7 +70,11 @@ class CacheItem extends EventCapableAbstract implements CacheItemExtendedInterfa
     protected $value;
 
     /**
-     * default expiration time in seconds, max is 0x7fffffff
+     * default expiration timestamp in seconds
+     *
+     * - 0 for no expiration
+     *
+     * - max value is 0x7fffffff
      *
      * @var    int
      * @access protected
@@ -93,34 +90,20 @@ class CacheItem extends EventCapableAbstract implements CacheItemExtendedInterfa
     protected $ttl = 28800;
 
     /**
-     * event names
-     */
-    const EVENT_BEFORE_HAS = 'cacheitem.before.has';
-    const EVENT_AFTER_HAS = 'cacheitem.after.has';
-    const EVENT_BEFORE_GET = 'cacheitem.before.get';
-    const EVENT_AFTER_GET = 'cacheitem.after.get';
-    const EVENT_BEFORE_DELETE = 'cacheitem.before.delete';
-    const EVENT_AFTER_DELETE = 'cacheitem.after.delete';
-    const EVENT_BEFORE_SAVE = 'cacheitem.before.save';
-    const EVENT_AFTER_SAVE = 'cacheitem.after.save';
-    const EVENT_BEFORE_DEFER = 'cacheitem.before.defer';
-    const EVENT_AFTER_DEFER = 'cacheitem.after.defer';
-
-    /**
      * Constructor
      *
      * @param  string $key
-     * @param  DriverInterface $driver
+     * @param  CachePool $pool
      * @param  array $properties optional properties
      * @access public
      */
     public function __construct(
         /*# string */ $key,
-        DriverInterface $driver,
+        CachePool $pool,
         array $properties = []
     ) {
         $this->key = $key;
-        $this->setDriver($driver);
+        $this->pool = $pool;
         $this->setProperties($properties);
     }
 
@@ -159,9 +142,9 @@ class CacheItem extends EventCapableAbstract implements CacheItemExtendedInterfa
             return $this->hit;
         }
 
-        if ($this->trigger(self::EVENT_BEFORE_HAS) &&
-            $this->getDriver()->has($this->key) &&
-            $this->trigger(self::EVENT_AFTER_HAS)
+        if ($this->trigger(CachePool::EVENT_HAS_BEFORE) &&
+            $this->pool->getDriver()->has($this->key) &&
+            $this->trigger(CachePool::EVENT_HAS_AFTER)
         ) {
             return $this->setHit(true);
         }
@@ -225,68 +208,6 @@ class CacheItem extends EventCapableAbstract implements CacheItemExtendedInterfa
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public function delete()/*# : bool */
-    {
-        if (!$this->trigger(self::EVENT_BEFORE_DELETE)) {
-            return false;
-        }
-
-        if (!$this->getDriver()->delete($this->key)) {
-            return false;
-        }
-
-        $this->setHit(false);
-
-        if (!$this->trigger(self::EVENT_AFTER_DELETE)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function save()/*# : bool */
-    {
-        if (!$this->trigger(self::EVENT_BEFORE_SAVE)) {
-            return false;
-        }
-
-        if (!$this->getDriver()->save($this)) {
-            return false;
-        }
-
-        if (!$this->trigger(self::EVENT_AFTER_SAVE)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function saveDeferred()/*# : bool */
-    {
-        if (!$this->trigger(self::EVENT_BEFORE_DEFER)) {
-            return false;
-        }
-
-        if (!$this->getDriver()->saveDeferred($this)) {
-            return false;
-        }
-
-        if (!$this->trigger(self::EVENT_AFTER_DEFER)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Set hit status
      *
      * @param  bool $hit
@@ -308,24 +229,32 @@ class CacheItem extends EventCapableAbstract implements CacheItemExtendedInterfa
     protected function getValue()
     {
         // before get
-        $param = ['key' => $this->key];
-        if (!$this->trigger(self::EVENT_BEFORE_GET, $param)) {
+        if (!$this->trigger(CachePool::EVENT_GET_BEFORE)) {
             $this->setHit(false);
             return null;
         }
 
         // get the value from the pool
-        $val = $this->getDriver()->get($this->key);
+        $this->set($this->getDriver()->get($this->key));
 
         // after get
-        $param['value'] = $val;
-        if (!$this->trigger(self::EVENT_AFTER_GET, $param)) {
+        if (!$this->trigger(CachePool::EVENT_GET_AFTER)) {
             $this->setHit(false);
-            return null;
+            $this->set(null);
         }
 
-        $this->set($val);
-
         return $this->value;
+    }
+
+    /**
+     * Trigger cache pool event
+     *
+     * @param  string $eventName
+     * @return bool
+     * @access protected
+     */
+    protected function trigger(/*# string */ $eventName)/*# : bool */
+    {
+        return $this->pool->trigger($eventName, ['item' => $this]);
     }
 }

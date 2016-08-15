@@ -38,28 +38,4 @@ interface CacheItemExtendedInterface extends CacheItemInterface
      * @return \DateTime The timestamp at which this cache item will expire.
      */
     public function getExpiration()/*# : \DateTime */;
-
-    /**
-     * Delete current item from the pool
-     *
-     * @return bool
-     * @access public
-     */
-    public function delete()/*# : bool */;
-
-    /**
-     * Save current item to the pool
-     *
-     * @return bool
-     * @access public
-     */
-    public function save()/*# : bool */;
-
-    /**
-     * Save current item deferred to the pool
-     *
-     * @return bool
-     * @access public
-     */
-    public function saveDeferred()/*# : bool */;
 }
