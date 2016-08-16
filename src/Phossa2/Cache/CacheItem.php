@@ -269,8 +269,8 @@ class CacheItem extends ObjectAbstract implements CacheItemExtendedInterface
             return null;
         }
 
-        // get the value from the pool
-        $str = $this->getDriver()->get($this->key);
+        // get string content from the pool
+        $str = $this->pool->getDriver()->get($this->key);
 
         // after get
         if (!$this->trigger(CachePool::EVENT_GET_AFTER)) {

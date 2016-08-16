@@ -45,7 +45,7 @@ class ByPass extends CacheExtensionAbstract
      */
     public function methodsAvailable()/*# : array */
     {
-        return ['byPass'];
+        return ['byPassCache'];
     }
 
     /**
@@ -54,7 +54,7 @@ class ByPass extends CacheExtensionAbstract
     protected function cacheEvents()/*# : array */
     {
         return [
-            ['event' => 'cache.*', 'handler' => ['byPass', 100]]
+            ['event' => 'cache.*', 'handler' => ['byPassCache', 100]]
         ];
     }
 
@@ -68,7 +68,7 @@ class ByPass extends CacheExtensionAbstract
      * @return bool
      * @access public
      */
-    public function byPass(EventInterface $event)/*# : bool */
+    public function byPassCache(EventInterface $event)/*# : bool */
     {
         /* @var CachePool $pool */
         $pool = $event->getTarget();
