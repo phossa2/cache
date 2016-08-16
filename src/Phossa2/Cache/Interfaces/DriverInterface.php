@@ -29,14 +29,16 @@ use Psr\Cache\CacheItemInterface;
 interface DriverInterface
 {
     /**
-     * Returns true if $key exists and not expired
+     * Returns the meta data of the key.
+     *
+     * If not found, returns empty []
      *
      * @param  string $key the key
-     * @return bool
+     * @return array
      * @access public
      * @api
      */
-    public function has(/*# string */ $key)/*# : bool */;
+    public function has(/*# string */ $key)/*# : array */;
 
     /**
      * Get data from storage base on the key
@@ -44,11 +46,11 @@ interface DriverInterface
      * ALWAYS CALL call has() before get() !!!
      *
      * @param  string $key the key
-     * @return string
+     * @return string|null
      * @access public
      * @api
      */
-    public function get(/*# string */ $key)/*# : string */;
+    public function get(/*# string */ $key);
 
     /**
      * Save item to the pool. return false on error

@@ -62,12 +62,20 @@ class CacheItem extends ObjectAbstract implements CacheItemExtendedInterface
     protected $got = false;
 
     /**
-     * Item value
+     * Item exact value
      *
      * @var    mixed
      * @access protected
      */
     protected $value;
+
+    /**
+     * Processed item value
+     *
+     * @var    string
+     * @access protected
+     */
+    protected $strval;
 
     /**
      * default expiration timestamp in seconds
@@ -157,8 +165,12 @@ class CacheItem extends ObjectAbstract implements CacheItemExtendedInterface
      */
     public function set($value)
     {
-        $this->got = true;
-        $this->value = $value;
+        if ($this->trigger(CachePool::EVENT_SET_BEFORE)) {
+            $this->got = true;
+            $this->value = $value;
+            $this->strval = null;
+            $this->trigger(CachePool::EVENT_SET_AFTER);
+        }
         return $this;
     }
 
@@ -208,6 +220,29 @@ class CacheItem extends ObjectAbstract implements CacheItemExtendedInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function setStrVal(/*# string */ $strval)
+    {
+        $this->strval = $strval;
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __toString()/*# : string */
+    {
+        if (null !== $this->strval) {
+            return $this->strval;
+        } elseif (is_string($this->value)) {
+            return $this->value;
+        } else {
+            return serialize($this->value);
+        }
+    }
+
+    /**
      * Set hit status
      *
      * @param  bool $hit
@@ -235,7 +270,7 @@ class CacheItem extends ObjectAbstract implements CacheItemExtendedInterface
         }
 
         // get the value from the pool
-        $this->set($this->getDriver()->get($this->key));
+        $str = $this->getDriver()->get($this->key);
 
         // after get
         if (!$this->trigger(CachePool::EVENT_GET_AFTER)) {

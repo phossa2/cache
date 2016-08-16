@@ -52,6 +52,8 @@ class CachePool extends EventCapableAbstract implements CacheItemPoolInterface, 
     const EVENT_HAS_AFTER = 'cache.has.after';
     const EVENT_GET_BEFORE = 'cache.get.before';
     const EVENT_GET_AFTER = 'cache.get.after';
+    const EVENT_SET_BEFORE = 'cache.set.before';
+    const EVENT_SET_AFTER = 'cache.set.after';
     const EVENT_CLEAR_BEFORE = 'cache.clear.before';
     const EVENT_CLEAR_AFTER = 'cache.clear.after';
     const EVENT_DELETE_BEFORE = 'cache.delete.before';

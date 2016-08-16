@@ -3,9 +3,9 @@
 namespace Phossa2\Cache;
 
 /**
- * SampleClass test case.
+ * CachePool test case.
  */
-class SampleClassTest extends \PHPUnit_Framework_TestCase
+class CachePoolTest extends \PHPUnit_Framework_TestCase
 {
     private $object;
 
@@ -15,7 +15,6 @@ class SampleClassTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->object = new SampleClass();
     }
 
     /**
@@ -56,16 +55,5 @@ class SampleClassTest extends \PHPUnit_Framework_TestCase
         $method->setAccessible(true);
 
         return $method->invokeArgs($this->object, $parameters);
-    }
-
-    /**
-     * Test get
-     *
-     * @cover Phossa2\Cache\SampleClass::get()
-     * @expectedException Phossa2\Cache\Exception\LogicException
-     * @expectedExceptionCode Phossa2\Cache\Message\Message::PACKAGE_CONST
-     */
-    public function testGet()
-    {
     }
 }

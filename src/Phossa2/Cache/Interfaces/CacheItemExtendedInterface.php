@@ -30,12 +30,27 @@ use Psr\Cache\CacheItemInterface;
 interface CacheItemExtendedInterface extends CacheItemInterface
 {
     /**
-     * Returns the expiration time of a not-yet-expired cache item.
+     * Get the expiration
      *
-     * If this cache item is a Cache Miss, this method MAY return the time at
-     * which the item expired or the current time if that is not available.
-     *
-     * @return \DateTime The timestamp at which this cache item will expire.
+     * @return \DateTime
+     * @access public
      */
     public function getExpiration()/*# : \DateTime */;
+
+    /**
+     * Set stringized value
+     *
+     * @param  string $strval
+     * @return $this
+     * @access public
+     */
+    public function setStrVal(/*# string */ $strval);
+
+    /**
+     * Returns the stringized item value
+     *
+     * @return string
+     * @access public
+     */
+    public function __toString()/*# : string */;
 }

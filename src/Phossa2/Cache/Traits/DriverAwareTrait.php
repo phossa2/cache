@@ -14,8 +14,10 @@
 
 namespace Phossa2\Cache\Traits;
 
+use Phossa2\Cache\Driver\NullDriver;
 use Phossa2\Cache\Interfaces\DriverInterface;
 use Phossa2\Cache\Interfaces\DriverAwareInterface;
+use Phossa2\Cache\Interfaces\FallbackAwareInterface;
 
 /**
  * DriverAwareTrait
@@ -50,6 +52,16 @@ trait DriverAwareTrait
      */
     public function getDriver()/*# : DriverInterface */
     {
-        return $this->driver;
+        if (is_null($this->driver)) {
+            return new NullDriver();
+        }
+
+        if ($this->driver->ping()) {
+            return $this->driver;
+        } elseif ($this instanceof FallbackAwareInterface && $this->hasFallback()) {
+            return $this->getFallback();
+        } else {
+            return new NullDriver();
+        }
     }
 }

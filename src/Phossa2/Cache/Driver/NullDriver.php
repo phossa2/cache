@@ -15,32 +15,35 @@
 namespace Phossa2\Cache\Driver;
 
 use Psr\Cache\CacheItemInterface;
+use Phossa2\Shared\Base\ObjectAbstract;
+use Phossa2\Cache\Interfaces\DriverInterface;
 
 /**
  * NullDriver
  *
  * @package Phossa2\Cache
  * @author  Hong Zhang <phossa@126.com>
- * @see     DriverAbstract
+ * @see     ObjectAbstract
+ * @see     DriverInterface
  * @version 2.0.0
  * @since   2.0.0 added
  */
-class NullDriver extends DriverAbstract
+class NullDriver extends ObjectAbstract implements DriverInterface
 {
     /**
      * {inheritDoc}
      */
-    public function has(/*# string */ $key)/*# : bool */
+    public function has(/*# string */ $key)/*# : array */
     {
-        return false;
+        return [];
     }
 
     /**
      * {@inheritDoc}
      */
-    public function get(/*# string */ $key)/*# : string */
+    public function get(/*# string */ $key)
     {
-        return serialize(null);
+        return null;
     }
 
     /**
@@ -62,6 +65,14 @@ class NullDriver extends DriverAbstract
     /**
      * {@inheritDoc}
      */
+    public function delete(CacheItemInterface $item)/*# : bool */
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function commit()/*# : bool */
     {
         return true;
@@ -70,23 +81,7 @@ class NullDriver extends DriverAbstract
     /**
      * {@inheritDoc}
      */
-    public function delete(/*# string */ $key)/*# : bool */
-    {
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function clear()/*# : bool */
-    {
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function purge(/*# int */ $maxlife)/*# : bool */
     {
         return true;
     }
