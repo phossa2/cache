@@ -43,8 +43,9 @@ use Phossa2\Shared\Extension\ExtensionAwareInterface;
  * @see     CacheItemPoolInterface
  * @see     DriverAwareInterface
  * @see     ErrorAwareInterface
- * @version 2.0.0
+ * @version 2.0.1
  * @since   2.0.0 added
+ * @since   2.0.1 updated __construct()
  */
 class CachePool extends EventCapableAbstract implements CacheItemPoolInterface, DriverAwareInterface, FallbackAwareInterface, ExtensionAwareInterface, UtilityAwareInterface, ErrorAwareInterface
 {
@@ -75,13 +76,10 @@ class CachePool extends EventCapableAbstract implements CacheItemPoolInterface, 
      * Constructor
      *
      * @param  DriverInterface $driver
-     * @param  EventManagerInterface $eventManager
      * @access public
+     * @since  2.0.1 removed eventManager param
      */
-    public function __construct(
-        DriverInterface $driver = null,
-        EventManagerInterface $eventManager = null
-    ) {
+    public function __construct(DriverInterface $driver = null) {
         // use default driver
         if (is_null($driver)) {
             $driver = new StorageDriver(
@@ -90,10 +88,6 @@ class CachePool extends EventCapableAbstract implements CacheItemPoolInterface, 
             );
         }
         $this->setDriver($driver);
-
-        if ($eventManager) {
-            $this->setEventManager($eventManager);
-        }
     }
 
     /**
