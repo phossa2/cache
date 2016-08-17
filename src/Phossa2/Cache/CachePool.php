@@ -29,7 +29,6 @@ use Phossa2\Shared\Error\ErrorAwareInterface;
 use Phossa2\Cache\Traits\CacheItemAwareTrait;
 use Phossa2\Cache\Interfaces\DriverInterface;
 use Phossa2\Cache\Interfaces\DriverAwareInterface;
-use Phossa2\Event\Interfaces\EventManagerInterface;
 use Phossa2\Cache\Interfaces\UtilityAwareInterface;
 use Phossa2\Cache\Interfaces\FallbackAwareInterface;
 use Phossa2\Shared\Extension\ExtensionAwareInterface;
