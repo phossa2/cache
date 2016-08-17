@@ -64,7 +64,8 @@ Features
 
   - **StorageDriver**
 
-    The storage driver uses `phossa2/storage` local or cloud storage.
+    The storage driver uses [phossa2/storage](https://github.com/phossa2/storage)
+    local or cloud storage.
 
   - **NullDriver**
 
@@ -77,7 +78,7 @@ Usage
 
   ```php
   /*
-   * cache dir default to local `sys_get_temp_dir() . '/cache'`
+   * cache dir default to local sys_get_temp_dir() . '/cache'
    */
   $cache = new CachePool();
 
@@ -112,6 +113,9 @@ Usage
   /*
    * DistributedExpiration extension
    */
+  use Phossa2\Cache\CachePool;
+  use Phossa2\Cache\Extension\DistributedExpiration;
+
   $cache = new CachePool();
   $cache->addExtension(new DistributedExpiration());
   ```
@@ -138,9 +142,9 @@ Dependencies
 
 - PHP >= 5.4.0
 
-- phossa2/event >= 2.1.4
+- [phossa2/event](https://github.com/phossa2/event) >= 2.1.4
 
-- phossa2/storage >= 2.0.0
+- [phossa2/storage](https://github.com/phossa2/storage) >= 2.0.0
 
 License
 ---
