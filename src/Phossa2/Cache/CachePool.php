@@ -19,13 +19,14 @@ use Psr\Cache\CacheItemPoolInterface;
 use Phossa2\Event\EventCapableAbstract;
 use Phossa2\Shared\Error\ErrorAwareTrait;
 use Phossa2\Cache\Traits\DriverAwareTrait;
+use Phossa2\Cache\Traits\UtilityAwareTrait;
 use Phossa2\Cache\Traits\FallbackAwareTrait;
 use Phossa2\Shared\Error\ErrorAwareInterface;
 use Phossa2\Cache\Traits\CacheItemAwareTrait;
 use Phossa2\Cache\Interfaces\DriverInterface;
-use Phossa2\Shared\Extension\ExtensionAwareTrait;
 use Phossa2\Cache\Interfaces\DriverAwareInterface;
 use Phossa2\Event\Interfaces\EventManagerInterface;
+use Phossa2\Cache\Interfaces\UtilityAwareInterface;
 use Phossa2\Cache\Interfaces\FallbackAwareInterface;
 use Phossa2\Shared\Extension\ExtensionAwareInterface;
 use Phossa2\Cache\Interfaces\CacheItemExtendedInterface;
@@ -42,9 +43,9 @@ use Phossa2\Cache\Interfaces\CacheItemExtendedInterface;
  * @version 2.0.0
  * @since   2.0.0 added
  */
-class CachePool extends EventCapableAbstract implements CacheItemPoolInterface, DriverAwareInterface, FallbackAwareInterface, ExtensionAwareInterface, ErrorAwareInterface
+class CachePool extends EventCapableAbstract implements CacheItemPoolInterface, DriverAwareInterface, FallbackAwareInterface, ExtensionAwareInterface, UtilityAwareInterface, ErrorAwareInterface
 {
-    use DriverAwareTrait, CacheItemAwareTrait, ExtensionAwareTrait, FallbackAwareTrait, ErrorAwareTrait;
+    use DriverAwareTrait, CacheItemAwareTrait, UtilityAwareTrait, FallbackAwareTrait, ErrorAwareTrait;
 
     /**
      * event names
@@ -181,7 +182,7 @@ class CachePool extends EventCapableAbstract implements CacheItemPoolInterface, 
      *
      * @param  string $event
      * @param  string $action
-     * @param  CacheItemExtendedInterface $item
+     * @param  CacheItemExtendedInterface|null $item
      * @return bool
      * @access protected
      */
@@ -197,12 +198,10 @@ class CachePool extends EventCapableAbstract implements CacheItemPoolInterface, 
         if (!$this->trigger($beforeEvent, $param)) {
             return false;
         }
-
         if (!$this->driverAction($action, $item)) {
             $this->copyError($this->getDriver());
             return false;
         }
-
         if (!$this->trigger($afterEvent, $param)) {
             return false;
         }

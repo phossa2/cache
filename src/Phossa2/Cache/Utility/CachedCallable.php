@@ -16,7 +16,7 @@ namespace Phossa2\Cache\Utility;
 
 use Phossa2\Cache\CachePool;
 use Phossa2\Cache\CacheItem;
-use Phossa2\Shared\Extension\ExtensionAbstract;
+use Phossa2\Cache\Extension\CacheExtensionAbstract;
 
 /**
  * CachedCallable
@@ -24,7 +24,7 @@ use Phossa2\Shared\Extension\ExtensionAbstract;
  * Cache result of a callable
  *
  * ```php
- * $cachePool->addExtension(new CachedCallable());
+ * $cachePool->addUtility(new CachedCallable());
  *
  * // get result of callable [$object, 'method'] with parameters ...
  * // cache the result for 3600 sec.
@@ -33,13 +33,13 @@ use Phossa2\Shared\Extension\ExtensionAbstract;
  *
  * @package Phossa2\Cache
  * @author  Hong Zhang <phossa@126.com>
- * @see     ExtensionAbstract
+ * @see     CacheExtensionAbstract
  * @see     CacheItem
  * @see     CachePool
  * @version 2.0.0
  * @since   2.0.0 added
  */
-class CachedCallable extends ExtensionAbstract
+class CachedCallable extends CacheExtensionAbstract
 {
     /**
      * default ttl for the cached callable result
@@ -55,13 +55,6 @@ class CachedCallable extends ExtensionAbstract
     public function methodsAvailable()/*# : array */
     {
         return ['callableCache'];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected function bootExtension()
-    {
     }
 
     /**
@@ -98,6 +91,15 @@ class CachedCallable extends ExtensionAbstract
             $cache->save($item->set($val)->expiresAfter($ttl));
             return $val;
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function cacheEvents()/*# : array */
+    {
+        // skip events stuff
+        return [];
     }
 
     /**

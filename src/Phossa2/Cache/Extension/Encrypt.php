@@ -14,6 +14,7 @@
 
 namespace Phossa2\Cache\Extension;
 
+use Phossa2\Cache\CacheItem;
 use Phossa2\Cache\CachePool;
 use Phossa2\Event\Interfaces\EventInterface;
 
@@ -98,11 +99,7 @@ class Encrypt extends CacheExtensionAbstract
      */
     public function doEncrypt(EventInterface $event)/*# : bool */
     {
-        /* @var CacheItem $item */
-        $item = $event->getParam('item');
-        $func = $this->encrypt;
-        $item->setStrVal($func($item->getStrVal()));
-        return true;
+        return $this->processValue($this->encrypt, $event->getParam('item'));
     }
 
     /**
@@ -114,9 +111,19 @@ class Encrypt extends CacheExtensionAbstract
      */
     public function doDecrypt(EventInterface $event)/*# : bool */
     {
-        /* @var CacheItem $item */
-        $item = $event->getParam('item');
-        $func = $this->decrypt;
+        return $this->processValue($this->decrypt, $event->getParam('item'));
+    }
+
+    /**
+     * Encrypt or decrypt
+     *
+     * @param  callable $func
+     * @param  CacheItem $item
+     * @return bool
+     * @access protected
+     */
+    protected function processValue(callable $func, CacheItem $item)
+    {
         $item->setStrVal($func($item->getStrVal()));
         return true;
     }

@@ -277,11 +277,21 @@ class CacheItem extends ObjectAbstract implements CacheItemExtendedInterface
             $this->set(null);
         }
 
+        return $this->postGetValue();
+    }
+
+    /**
+     * Convert $this->strval to $this->value if not yet
+     *
+     * @return mixed
+     * @access protected
+     */
+    protected function postGetValue()
+    {
         if (is_null($this->value)) {
             $val = @unserialize($this->strval);
             $this->value = false === $val ? $this->strval : $val;
         }
-
         return $this->value;
     }
 

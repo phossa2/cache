@@ -14,6 +14,7 @@
 
 namespace Phossa2\Cache\Extension;
 
+use Phossa2\Cache\CacheItem;
 use Phossa2\Cache\CachePool;
 use Phossa2\Cache\Message\Message;
 use Phossa2\Event\Interfaces\EventInterface;
@@ -36,6 +37,8 @@ use Phossa2\Cache\Interfaces\CacheItemExtendedInterface;
  *
  * @package Phossa2\Cache
  * @author  Hong Zhang <phossa@126.com>
+ * @see     CacheExtensionAbstract
+ * @see     CacheItem
  * @version 2.0.0
  * @since   2.0.0 added
  */
@@ -90,16 +93,12 @@ class StampedeProtection extends CacheExtensionAbstract
     {
         /* @var CachePool $pool */
         $pool = $event->getTarget();
-
+        /* @var CacheItem $item */
         $item = $event->getParam('item');
 
         if ($item instanceof CacheItemExtendedInterface) {
-            // time left
             $left = $item->getExpiration()->getTimestamp() - time();
-
-            if ($left < $this->time_left &&
-                rand(1, 1000) <= $this->probability
-            ) {
+            if ($left < $this->time_left && rand(1, 1000) <= $this->probability) {
                 return $pool->setError(
                     Message::get(Message::CACHE_EXT_STAMPEDE, $item->getKey()),
                     Message::CACHE_EXT_STAMPEDE
