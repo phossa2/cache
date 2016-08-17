@@ -37,11 +37,17 @@ class Message extends BaseMessage
      */
     const CACHE_EXT_BYPASS = 1608121020;
 
+    /*
+     * Stampede protection for "%s"
+     */
+    const CACHE_EXT_STAMPEDE = 1608121021;
+
     /**
      * {@inheritDoc}
      */
     protected static $messages = [
         self::CACHE_INVALID_KEY => 'Invalide cache key "%s"',
         self::CACHE_EXT_BYPASS => 'Bypass cache',
+        self::CACHE_EXT_STAMPEDE => 'Stampede protection for "%s"',
     ];
 }

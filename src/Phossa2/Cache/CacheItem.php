@@ -130,15 +130,13 @@ class CacheItem extends ObjectAbstract implements CacheItemExtendedInterface
     {
         if ($this->got) {
             return $this->value;
+        } else {
+            $this->got = true;
+            if (!$this->isHit()) {
+                return null;
+            }
+            return $this->getValue();
         }
-
-        $this->got = true;
-
-        if (!$this->isHit()) {
-            return null;
-        }
-
-        return $this->getValue();
     }
 
     /**
@@ -148,16 +146,9 @@ class CacheItem extends ObjectAbstract implements CacheItemExtendedInterface
     {
         if (is_bool($this->hit)) {
             return $this->hit;
+        } else {
+            return $this->getHit();
         }
-
-        if ($this->trigger(CachePool::EVENT_HAS_BEFORE) &&
-            $this->pool->getDriver()->has($this->key) &&
-            $this->trigger(CachePool::EVENT_HAS_AFTER)
-        ) {
-            return $this->setHit(true);
-        }
-
-        return $this->setHit(false);
     }
 
     /**
@@ -222,7 +213,7 @@ class CacheItem extends ObjectAbstract implements CacheItemExtendedInterface
     /**
      * {@inheritDoc}
      */
-    public function setStrVal(/*# string */ $strval)
+    public function setStrVal($strval)
     {
         $this->strval = $strval;
         return $this;
@@ -231,9 +222,17 @@ class CacheItem extends ObjectAbstract implements CacheItemExtendedInterface
     /**
      * {@inheritDoc}
      */
+    public function getStrVal()
+    {
+        return $this->strval;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function __toString()/*# : string */
     {
-        if (null !== $this->strval) {
+        if (is_string($this->strval)) {
             return $this->strval;
         } elseif (is_string($this->value)) {
             return $this->value;
@@ -269,8 +268,8 @@ class CacheItem extends ObjectAbstract implements CacheItemExtendedInterface
             return null;
         }
 
-        // get string content from the pool
-        $str = $this->pool->getDriver()->get($this->key);
+        // get string value from the pool
+        $this->strval = $this->pool->getDriver()->get($this->key);
 
         // after get
         if (!$this->trigger(CachePool::EVENT_GET_AFTER)) {
@@ -278,7 +277,38 @@ class CacheItem extends ObjectAbstract implements CacheItemExtendedInterface
             $this->set(null);
         }
 
+        if (is_null($this->value)) {
+            $val = @unserialize($this->strval);
+            $this->value = false === $val ? $this->strval : $val;
+        }
+
         return $this->value;
+    }
+
+    /**
+     * Get hit status from driver
+     *
+     * @return bool
+     * @access protected
+     */
+    protected function getHit()/*# : bool */
+    {
+        if (!$this->trigger(CachePool::EVENT_HAS_BEFORE)) {
+            return $this->setHit(false);
+        }
+
+        $meta = $this->pool->getDriver()->has($this->key);
+        if (isset($meta['expire'])) {
+            $this->expire = $meta['expire'];
+        } else {
+            return $this->setHit(false);
+        }
+
+        if (!$this->trigger(CachePool::EVENT_HAS_AFTER)) {
+            return $this->setHit(false);
+        }
+
+        return $this->setHit(true);
     }
 
     /**

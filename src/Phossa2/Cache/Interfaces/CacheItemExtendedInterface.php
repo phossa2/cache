@@ -40,11 +40,19 @@ interface CacheItemExtendedInterface extends CacheItemInterface
     /**
      * Set stringized value
      *
-     * @param  string $strval
+     * @param  string|null $strval
      * @return $this
      * @access public
      */
-    public function setStrVal(/*# string */ $strval);
+    public function setStrVal($strval);
+
+    /**
+     * Get stringed value
+     *
+     * @return string|null
+     * @access public
+     */
+    public function getStrVal();
 
     /**
      * Returns the stringized item value

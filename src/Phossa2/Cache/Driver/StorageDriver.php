@@ -16,10 +16,6 @@ namespace Phossa2\Cache\Driver;
 
 use Phossa2\Storage\Storage;
 use Psr\Cache\CacheItemInterface;
-use Phossa2\Shared\Base\ObjectAbstract;
-use Phossa2\Shared\Error\ErrorAwareTrait;
-use Phossa2\Cache\Interfaces\DriverInterface;
-use Phossa2\Shared\Error\ErrorAwareInterface;
 use Phossa2\Cache\Interfaces\CacheItemExtendedInterface;
 
 /**
@@ -29,15 +25,12 @@ use Phossa2\Cache\Interfaces\CacheItemExtendedInterface;
  *
  * @package Phossa2\Cache
  * @author  Hong Zhang <phossa@126.com>
- * @see     ObjectAbstract
- * @see     DriverInterface
+ * @see     DriverAbstract
  * @version 2.0.0
  * @since   2.0.0 added
  */
-class StorageDriver extends ObjectAbstract implements DriverInterface, ErrorAwareInterface
+class StorageDriver extends DriverAbstract
 {
-    use ErrorAwareTrait;
-
     /**
      * Storage backend
      *
@@ -59,45 +52,17 @@ class StorageDriver extends ObjectAbstract implements DriverInterface, ErrorAwar
      *
      * @param  Storage $storage
      * @param  string $cacheDir
+     * @param  array $properties
      * @access public
      */
-    public function __construct(Storage $storage, /*# string */ $cacheDir)
-    {
+    public function __construct(
+        Storage $storage,
+        /*# string */ $cacheDir = '/cache',
+        array $properties = []
+    ) {
         $this->storage = $storage;
         $this->cache_dir = rtrim($cacheDir, '/');
-    }
-
-    /**
-     * Use mtime as expiration time
-     *
-     * {@inheritDoc}
-     */
-    public function has(/*# string */ $key)/*# : array */
-    {
-        $path = $this->getPath($key);
-
-        // not found
-        if (!$this->storage->has($path)) {
-            return [];
-        }
-
-        // translate 'mtime' to 'expire'
-        $meta = $this->storage->meta($path);
-        if (isset($meta['mtime'])) {
-            $meta['expire'] = $meta['mtime'];
-        }
-
-        return $meta;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function get(/*# string */ $key)
-    {
-        $res = $this->storage->get($this->getPath($key));
-        $this->resetError();
-        return is_string($res) ? $res : null;
+        parent::__construct($properties);
     }
 
     /**
@@ -120,15 +85,38 @@ class StorageDriver extends ObjectAbstract implements DriverInterface, ErrorAwar
     /**
      * {@inheritDoc}
      */
-    public function saveDeferred(CacheItemInterface $item)/*# : bool */
+    protected function driverHas(/*# string */ $key)/*# : array */
     {
-        return $this->save($item);
+        $path = $this->getPath($key);
+
+        // not found
+        if (!$this->storage->has($path)) {
+            return [];
+        }
+
+        // translate 'mtime' to 'expire'
+        $meta = $this->storage->meta($path);
+        if (isset($meta['mtime'])) {
+            $meta['expire'] = (int) $meta['mtime'];
+        }
+
+        return $meta;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function delete(CacheItemInterface $item)/*# : bool */
+    protected function driverGet(/*# string */ $key)
+    {
+        $res = $this->storage->get($this->getPath($key));
+        $this->resetError();
+        return is_string($res) ? $res : null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function driverDelete(CacheItemInterface $item)/*# : bool */
     {
         $key = $item->getKey();
         $res = $this->storage->del($this->getPath($key));
@@ -138,26 +126,10 @@ class StorageDriver extends ObjectAbstract implements DriverInterface, ErrorAwar
     /**
      * {@inheritDoc}
      */
-    public function commit()/*# : bool */
-    {
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function clear()/*# : bool */
+    protected function driverClear()/*# : bool */
     {
         $res = $this->storage->del($this->cache_dir);
         return $res ?: $this->resetError();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function ping()/*# : bool */
-    {
-        return true;
     }
 
     /**

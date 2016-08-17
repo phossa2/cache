@@ -19,12 +19,14 @@ use Psr\Cache\CacheItemPoolInterface;
 use Phossa2\Event\EventCapableAbstract;
 use Phossa2\Shared\Error\ErrorAwareTrait;
 use Phossa2\Cache\Traits\DriverAwareTrait;
+use Phossa2\Cache\Traits\FallbackAwareTrait;
 use Phossa2\Shared\Error\ErrorAwareInterface;
 use Phossa2\Cache\Traits\CacheItemAwareTrait;
 use Phossa2\Cache\Interfaces\DriverInterface;
 use Phossa2\Shared\Extension\ExtensionAwareTrait;
 use Phossa2\Cache\Interfaces\DriverAwareInterface;
 use Phossa2\Event\Interfaces\EventManagerInterface;
+use Phossa2\Cache\Interfaces\FallbackAwareInterface;
 use Phossa2\Shared\Extension\ExtensionAwareInterface;
 use Phossa2\Cache\Interfaces\CacheItemExtendedInterface;
 
@@ -40,9 +42,9 @@ use Phossa2\Cache\Interfaces\CacheItemExtendedInterface;
  * @version 2.0.0
  * @since   2.0.0 added
  */
-class CachePool extends EventCapableAbstract implements CacheItemPoolInterface, DriverAwareInterface, ExtensionAwareInterface, ErrorAwareInterface
+class CachePool extends EventCapableAbstract implements CacheItemPoolInterface, DriverAwareInterface, FallbackAwareInterface, ExtensionAwareInterface, ErrorAwareInterface
 {
-    use DriverAwareTrait, CacheItemAwareTrait, ExtensionAwareTrait, ErrorAwareTrait;
+    use DriverAwareTrait, CacheItemAwareTrait, ExtensionAwareTrait, FallbackAwareTrait, ErrorAwareTrait;
 
     /**
      * event names
@@ -77,7 +79,19 @@ class CachePool extends EventCapableAbstract implements CacheItemPoolInterface, 
         EventManagerInterface $eventManager = null
     ) {
         $this->setDriver($driver);
-        $this->setEventManager($eventManager);
+        if ($eventManager) {
+            $this->setEventManager($eventManager);
+        }
+    }
+
+    /**
+     * Destructor
+     *
+     * @access public
+     */
+    public function __destruct()
+    {
+        $this->commit();
     }
 
     /**
@@ -184,13 +198,7 @@ class CachePool extends EventCapableAbstract implements CacheItemPoolInterface, 
             return false;
         }
 
-        if (is_null($item)) {
-            $res = $this->getDriver()->{$action}();
-        } else {
-            $res = $this->getDriver()->{$action}($item);
-        }
-
-        if (!$res) {
+        if (!$this->driverAction($action, $item)) {
             $this->copyError($this->getDriver());
             return false;
         }
@@ -200,5 +208,21 @@ class CachePool extends EventCapableAbstract implements CacheItemPoolInterface, 
         }
 
         return $this->flushError();
+    }
+
+    /**
+     * Execute an action with the driver
+     *
+     * @param  string $action
+     * @param  CacheItemExtendedInterface|null $item
+     * @access protected
+     */
+    protected function driverAction(/*# string */ $action, $item)/*# : bool */
+    {
+        if (is_null($item)) {
+            return $this->getDriver()->{$action}();
+        } else {
+            return $this->getDriver()->{$action}($item);
+        }
     }
 }

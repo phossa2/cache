@@ -23,6 +23,13 @@ use Phossa2\Event\Interfaces\EventInterface;
  *
  * Bypass the cache if URL has 'nocache=true' set
  *
+ * ```php
+ * $ext = new ByPass(['trigger' => 'nocache']);
+ *
+ * // enable this ext
+ * $cachePool->addExtension($ext);
+ * ```
+ *
  * @package Phossa2\Cache
  * @author  Hong Zhang <phossa@126.com>
  * @see     CacheExtensionAbstract

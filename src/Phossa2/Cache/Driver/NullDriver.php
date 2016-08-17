@@ -15,37 +15,18 @@
 namespace Phossa2\Cache\Driver;
 
 use Psr\Cache\CacheItemInterface;
-use Phossa2\Shared\Base\ObjectAbstract;
-use Phossa2\Cache\Interfaces\DriverInterface;
 
 /**
  * NullDriver
  *
  * @package Phossa2\Cache
  * @author  Hong Zhang <phossa@126.com>
- * @see     ObjectAbstract
- * @see     DriverInterface
+ * @see     DriverAbstract
  * @version 2.0.0
  * @since   2.0.0 added
  */
-class NullDriver extends ObjectAbstract implements DriverInterface
+class NullDriver extends DriverAbstract
 {
-    /**
-     * {inheritDoc}
-     */
-    public function has(/*# string */ $key)/*# : array */
-    {
-        return [];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function get(/*# string */ $key)
-    {
-        return null;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -55,9 +36,25 @@ class NullDriver extends ObjectAbstract implements DriverInterface
     }
 
     /**
+     * {inheritDoc}
+     */
+    protected function driverHas(/*# string */ $key)/*# : array */
+    {
+        return [];
+    }
+
+    /**
      * {@inheritDoc}
      */
-    public function saveDeferred(CacheItemInterface $item)/*# : bool */
+    protected function driverGet(/*# string */ $key)
+    {
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    protected function driverDelete(CacheItemInterface $item)/*# : bool */
     {
         return true;
     }
@@ -65,31 +62,7 @@ class NullDriver extends ObjectAbstract implements DriverInterface
     /**
      * {@inheritDoc}
      */
-    public function delete(CacheItemInterface $item)/*# : bool */
-    {
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function commit()/*# : bool */
-    {
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function clear()/*# : bool */
-    {
-        return true;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function ping()/*# : bool */
+    protected function driverClear()/*# : bool */
     {
         return true;
     }

@@ -101,6 +101,15 @@ interface DriverInterface
     public function clear()/*# : bool */;
 
     /**
+     * Purge stale items in the pool
+     *
+     * @return bool
+     * @access public
+     * @api
+     */
+    public function purage()/*# : bool */;
+
+    /**
      * Ping driver, FALSE means driver failed
      *
      * @return bool

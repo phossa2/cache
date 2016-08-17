@@ -27,4 +27,5 @@ use Phossa2\Cache\Message\Message;
 return [
     Message::CACHE_INVALID_KEY => '缓存钥匙  "%s" 格式错误',
     Message::CACHE_EXT_BYPASS => '跳过缓存',
+    Message::CACHE_EXT_STAMPEDE => '缓存预过期保护 "%s"',
 ];

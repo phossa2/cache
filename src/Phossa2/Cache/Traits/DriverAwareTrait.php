@@ -52,13 +52,29 @@ trait DriverAwareTrait
      */
     public function getDriver()/*# : DriverInterface */
     {
+        // not found
         if (is_null($this->driver)) {
             return new NullDriver();
         }
 
+        // driver ok
         if ($this->driver->ping()) {
             return $this->driver;
-        } elseif ($this instanceof FallbackAwareInterface && $this->hasFallback()) {
+        }
+
+        // use fallback
+        return $this->tryFallback();
+    }
+
+    /**
+     * Try fallback driver. if fail, use NullDriver
+     *
+     * @return DriverInterface
+     * @access protected
+     */
+    protected function tryFallback()/*# : DriverInterface */
+    {
+        if ($this instanceof FallbackAwareInterface && $this->hasFallback()) {
             return $this->getFallback();
         } else {
             return new NullDriver();

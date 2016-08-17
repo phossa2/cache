@@ -53,6 +53,14 @@ trait CacheItemAwareTrait
     protected $item_cache;
 
     /**
+     * Use local cache for generated item
+     *
+     * @var    bool
+     * @access protected
+     */
+    protected $use_item_cache = false;
+
+    /**
      * Set cache item factory callable
      *
      * @param  callable $itemFactory
@@ -79,10 +87,14 @@ trait CacheItemAwareTrait
         $this->validateKey($key);
 
         // try local cache
-        if (!isset($this->item_cache[$key[0]][$key])) {
-            $this->item_cache[$key[0]][$key] = $this->createCacheItem($key);
+        if ($this->use_item_cache) {
+            if (!isset($this->item_cache[$key[0]][$key])) {
+                $this->item_cache[$key[0]][$key] = $this->createCacheItem($key);
+            }
+            return $this->item_cache[$key[0]][$key];
+        } else {
+            return $this->createCacheItem($key);
         }
-        return $this->item_cache[$key[0]][$key];
     }
 
     /**
