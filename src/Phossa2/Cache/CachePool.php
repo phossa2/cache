@@ -14,9 +14,13 @@
 
 namespace Phossa2\Cache;
 
+use Phossa2\Storage\Storage;
+use Phossa2\Storage\Filesystem;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
+use Phossa2\Storage\Driver\LocalDriver;
 use Phossa2\Event\EventCapableAbstract;
+use Phossa2\Cache\Driver\StorageDriver;
 use Phossa2\Shared\Error\ErrorAwareTrait;
 use Phossa2\Cache\Traits\DriverAwareTrait;
 use Phossa2\Cache\Traits\UtilityAwareTrait;
@@ -29,10 +33,6 @@ use Phossa2\Event\Interfaces\EventManagerInterface;
 use Phossa2\Cache\Interfaces\UtilityAwareInterface;
 use Phossa2\Cache\Interfaces\FallbackAwareInterface;
 use Phossa2\Shared\Extension\ExtensionAwareInterface;
-use Phossa2\Cache\Driver\StorageDriver;
-use Phossa2\Storage\Storage;
-use Phossa2\Storage\Filesystem;
-use Phossa2\Storage\Driver\LocalDriver;
 
 /**
  * CachePool
