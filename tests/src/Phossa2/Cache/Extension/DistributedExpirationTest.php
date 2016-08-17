@@ -59,7 +59,7 @@ class DistributedExpirationTest extends \PHPUnit_Framework_TestCase
 
         $diff = abs($item->getExpiration()->getTimestamp() - $time - 1000);
 
-        $this->assertTrue($diff > 0 && $diff < 51);
+        $this->assertTrue($diff >= 0 && $diff < 51);
 
         // delete item
         $this->object->deleteItem('test');

@@ -93,7 +93,7 @@ class DistributedExpiration extends CacheExtensionAbstract
             $percent = (rand(0, $dist * 2) - $dist) * 0.001;
 
             // new expire ttl
-            $new_ttl = (int) round($ttl + ($ttl * $percent) ?: 1);
+            $new_ttl = (int) round($ttl + $ttl * $percent);
             $item->expiresAfter($new_ttl);
         }
 
