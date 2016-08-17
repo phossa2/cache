@@ -29,7 +29,6 @@ use Phossa2\Event\Interfaces\EventManagerInterface;
 use Phossa2\Cache\Interfaces\UtilityAwareInterface;
 use Phossa2\Cache\Interfaces\FallbackAwareInterface;
 use Phossa2\Shared\Extension\ExtensionAwareInterface;
-use Phossa2\Cache\Interfaces\CacheItemExtendedInterface;
 
 /**
  * CachePool
@@ -211,7 +210,7 @@ class CachePool extends EventCapableAbstract implements CacheItemPoolInterface, 
      * Execute an action with the driver
      *
      * @param  string $action
-     * @param  CacheItemExtendedInterface|null $item
+     * @param  CacheItemInterface|null $item
      * @access protected
      */
     protected function driverAction(/*# string */ $action, $item)/*# : bool */
