@@ -132,7 +132,9 @@ class CachePool extends EventCapableAbstract implements CacheItemPoolInterface, 
      */
     public function clear()
     {
-        return $this->eventableAction('clear', 'clear');
+        return $this->eventableAction(
+            'clear', self::EVENT_CLEAR_BEFORE, self::EVENT_CLEAR_AFTER
+        );
     }
 
     /**
@@ -141,7 +143,9 @@ class CachePool extends EventCapableAbstract implements CacheItemPoolInterface, 
     public function deleteItem($key)
     {
         $item = $this->getItem($key);
-        return $this->eventableAction('delete', 'delete', $item);
+        return $this->eventableAction(
+            'delete', self::EVENT_DELETE_BEFORE, self::EVENT_DELETE_AFTER, $item
+        );
     }
 
     /**
@@ -162,7 +166,9 @@ class CachePool extends EventCapableAbstract implements CacheItemPoolInterface, 
      */
     public function save(CacheItemInterface $item)
     {
-        return $this->eventableAction('save', 'save', $item);
+        return $this->eventableAction(
+            'save', self::EVENT_SAVE_BEFORE, self::EVENT_SAVE_AFTER, $item
+        );
     }
 
     /**
@@ -170,7 +176,9 @@ class CachePool extends EventCapableAbstract implements CacheItemPoolInterface, 
      */
     public function saveDeferred(CacheItemInterface $item)
     {
-        return $this->eventableAction('defer', 'saveDeferred', $item);
+        return $this->eventableAction(
+            'saveDeferred', self::EVENT_DEFER_BEFORE, self::EVENT_DEFER_AFTER, $item
+        );
     }
 
     /**
@@ -178,25 +186,27 @@ class CachePool extends EventCapableAbstract implements CacheItemPoolInterface, 
      */
     public function commit()
     {
-        return $this->eventableAction('commit', 'commit');
+        return $this->eventableAction(
+            'commit', self::EVENT_COMMIT_BEFORE, self::EVENT_COMMIT_AFTER
+        );
     }
 
     /**
      * Execute an action
      *
-     * @param  string $event
      * @param  string $action
+     * @param  string $beforeEvent
+     * @param  string $afterEvent
      * @param  CacheItemInterface $item
      * @return bool
      * @access protected
      */
     protected function eventableAction(
-        /*# string */ $event,
         /*# string */ $action,
+        /*# string */ $beforeEvent,
+        /*# string */ $afterEvent,
         CacheItemInterface $item = null
     )/*# : bool */ {
-        $beforeEvent = 'cache.' . $event . '.before';
-        $afterEvent  = 'cache.' . $event . '.after';
         $param = ['item' => $item];
         if (!$this->trigger($beforeEvent, $param)) {
             return false;
