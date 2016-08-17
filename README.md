@@ -6,16 +6,20 @@
 [![Latest Stable Version](https://img.shields.io/packagist/vpre/phossa2/cache.svg?style=flat)](https://packagist.org/packages/phossa2/cache)
 [![License](https://poser.pugx.org/phossa2/cache/license)](http://mit-license.org/)
 
-**phossa2/cache** is a PSR-6 compliant caching library for PHP.
+**phossa2/cache** is a PSR-6 compliant caching library for PHP. It supports
+various drivers and useful features like bypass, encrypt, stampede protection
+etc.
 
 It requires PHP 5.4, supports PHP 7.0+ and HHVM. It is compliant with [PSR-1][PSR-1],
-[PSR-2][PSR-2], [PSR-3][PSR-3], [PSR-4][PSR-4], and the proposed [PSR-5][PSR-5].
+[PSR-2][PSR-2], [PSR-3][PSR-3], [PSR-4][PSR-4], [PSR-6][PSR-6] and the proposed
+[PSR-5][PSR-5].
 
 [PSR-1]: http://www.php-fig.org/psr/psr-1/ "PSR-1: Basic Coding Standard"
 [PSR-2]: http://www.php-fig.org/psr/psr-2/ "PSR-2: Coding Style Guide"
 [PSR-3]: http://www.php-fig.org/psr/psr-3/ "PSR-3: Logger Interface"
 [PSR-4]: http://www.php-fig.org/psr/psr-4/ "PSR-4: Autoloader"
 [PSR-5]: https://github.com/phpDocumentor/fig-standards/blob/master/proposed/phpdoc.md "PSR-5: PHPDoc"
+[PSR-6]: http://www.php-fig.org/psr/psr-6/ "PSR-6: Caching Interface"
 
 Installation
 ---
@@ -35,27 +39,82 @@ or add the following lines to your `composer.json`
 }
 ```
 
-Usage
----
-
-Create the cache instance,
-
-```php
-use Phossa2\Cache\Cache;
-
-$cache = new Cache();
-```
-
 Features
 ---
 
-- <a name="anchor"></a>**Feature One**
+- Fully [PSR-6][PSR-6] compliant.
 
+- Support all serializable PHP datatypes.
 
-APIs
----
+- **Extensions included**:
 
-- <a name="api"></a>`LoggerInterface` related
+  - **Bypass**: If sees a trigger in URL (e.g. '?nocache=true'), bypass the
+    cache.
+
+  - **Stampede Protection**: Whenever cached object's lifetime is less than a
+    configurable time, by a configurable percentage, the cache will return false
+    on 'isHit()' which will trigger re-generation of the object.
+
+  - **Encrypt**: A simple extension to encrypt the serialized content.
+
+  - **DistributedExpiration**: Even out the spikes of item misses by alter
+    expiration time a little bit.
+
+- **Drivers**
+
+  - **StorageDriver**
+
+    The storage driver uses `phossa2/storage` local or cloud storage.
+
+  - **NullDriver**
+
+    The blackhole driver, can be used as fallback driver for all other drivers.
+
+Usage
+--
+
+- Simple usage
+
+  ```php
+  /*
+   * cache dir default to local `sys_get_temp_dir() . '/cache'`
+   */
+  $cache = new CachePool();
+
+  $item = $cache->getItem('/data.cache');
+  if (!$item->isHit()) {
+      $value = calcuate_data();
+      $item->set($value);
+      $cache->save($item);
+  }
+  $data = $item->get();
+  ```
+
+- Specify the driver
+
+  ```php
+  use Phossa2\Cache\Driver\StorageDriver;
+  use Phossa2\Storage\Storage;
+  use Phossa2\Storage\Filesystem;
+  use Phossa2\Storage\Driver\LocalDriver;
+
+  $driver = new StorageDriver(
+      new Storage('/', new Filesystem(new LocalDriver(sys_get_temp_dir()))),
+      '/cache'
+  );
+
+  $cache = new CachePool($driver);
+  ```
+
+- Use extensions
+
+  ```php
+  /*
+   * DistributedExpiration extension
+   */
+  $cache = new CachePool();
+  $cache->addExtension(new DistributedExpiration());
+  ```
 
 Change log
 ---
@@ -79,7 +138,9 @@ Dependencies
 
 - PHP >= 5.4.0
 
-- phossa2/shared >= 2.0.23
+- phossa2/event >= 2.1.4
+
+- phossa2/storage >= 2.0.0
 
 License
 ---

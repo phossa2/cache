@@ -29,6 +29,10 @@ use Phossa2\Event\Interfaces\EventManagerInterface;
 use Phossa2\Cache\Interfaces\UtilityAwareInterface;
 use Phossa2\Cache\Interfaces\FallbackAwareInterface;
 use Phossa2\Shared\Extension\ExtensionAwareInterface;
+use Phossa2\Cache\Driver\StorageDriver;
+use Phossa2\Storage\Storage;
+use Phossa2\Storage\Filesystem;
+use Phossa2\Storage\Driver\LocalDriver;
 
 /**
  * CachePool
@@ -75,10 +79,18 @@ class CachePool extends EventCapableAbstract implements CacheItemPoolInterface, 
      * @access public
      */
     public function __construct(
-        DriverInterface $driver,
+        DriverInterface $driver = null,
         EventManagerInterface $eventManager = null
     ) {
+        // use default driver
+        if (is_null($driver)) {
+            $driver = new StorageDriver(
+                new Storage('/', new Filesystem(new LocalDriver(sys_get_temp_dir()))),
+                '/cache'
+            );
+        }
         $this->setDriver($driver);
+
         if ($eventManager) {
             $this->setEventManager($eventManager);
         }
