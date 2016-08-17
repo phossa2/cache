@@ -182,19 +182,18 @@ class CachePool extends EventCapableAbstract implements CacheItemPoolInterface, 
      *
      * @param  string $event
      * @param  string $action
-     * @param  CacheItemExtendedInterface|null $item
+     * @param  CacheItemInterface $item
      * @return bool
      * @access protected
      */
     protected function eventableAction(
         /*# string */ $event,
         /*# string */ $action,
-        CacheItemExtendedInterface $item = null
+        CacheItemInterface $item = null
     )/*# : bool */ {
         $beforeEvent = 'cache.' . $event . '.before';
         $afterEvent  = 'cache.' . $event . '.after';
         $param = ['item' => $item];
-
         if (!$this->trigger($beforeEvent, $param)) {
             return false;
         }
@@ -205,7 +204,6 @@ class CachePool extends EventCapableAbstract implements CacheItemPoolInterface, 
         if (!$this->trigger($afterEvent, $param)) {
             return false;
         }
-
         return $this->flushError();
     }
 

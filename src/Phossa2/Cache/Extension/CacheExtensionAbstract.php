@@ -14,8 +14,8 @@
 
 namespace Phossa2\Cache\Extension;
 
-use Phossa2\Cache\CachePool;
 use Phossa2\Shared\Extension\ExtensionAbstract;
+use Phossa2\Event\Interfaces\ListenerInterface;
 
 /**
  * CacheExtensionAbstract
@@ -23,7 +23,7 @@ use Phossa2\Shared\Extension\ExtensionAbstract;
  * @package Phossa2\Cache
  * @author  Hong Zhang <phossa@126.com>
  * @see     ExtensionAbstract
- * @see     CachePool
+ * @see     ListenerInterface
  * @version 2.0.0
  * @since   2.0.0 added
  */
@@ -47,7 +47,7 @@ abstract class CacheExtensionAbstract extends ExtensionAbstract
      */
     protected function bootExtension()
     {
-        /* @var CachePool $pool */;
+        /* @var ListenerInterface $pool */;
         $pool = $this->server;
 
         foreach ($this->cacheEvents() as $evt) {
