@@ -17,6 +17,7 @@ namespace Phossa2\Cache\Extension;
 use Phossa2\Cache\CachePool;
 use Phossa2\Cache\Message\Message;
 use Phossa2\Event\Interfaces\EventInterface;
+use Phossa2\Event\EventableExtensionAbstract;
 
 /**
  * ByPass extension
@@ -32,12 +33,13 @@ use Phossa2\Event\Interfaces\EventInterface;
  *
  * @package Phossa2\Cache
  * @author  Hong Zhang <phossa@126.com>
- * @see     CacheExtensionAbstract
+ * @see     EventableExtensionAbstract
  * @see     CachePool
- * @version 2.0.0
+ * @version 2.0.1
  * @since   2.0.0 added
+ * @since   2.0.1 moved to EventableExtensionAbstract
  */
-class ByPass extends CacheExtensionAbstract
+class ByPass extends EventableExtensionAbstract
 {
     /**
      * bypass trigger in the url
@@ -58,7 +60,7 @@ class ByPass extends CacheExtensionAbstract
     /**
      * {@inheritDoc}
      */
-    protected function cacheEvents()/*# : array */
+    protected function extensionHandles()/*# : array */
     {
         return [
             ['event' => 'cache.*', 'handler' => ['byPassCache', 100]]

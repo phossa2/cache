@@ -17,6 +17,7 @@ namespace Phossa2\Cache\Extension;
 use Phossa2\Cache\CacheItem;
 use Phossa2\Cache\CachePool;
 use Phossa2\Event\Interfaces\EventInterface;
+use Phossa2\Event\EventableExtensionAbstract;
 
 /**
  * Serialize
@@ -29,13 +30,14 @@ use Phossa2\Event\Interfaces\EventInterface;
  *
  * @package Phossa2\Cache
  * @author  Hong Zhang <phossa@126.com>
- * @see     CacheExtensionAbstract
+ * @see     EventableExtensionAbstract
  * @see     CacheItem
  * @see     CachePool
- * @version 2.0.0
+ * @version 2.0.1
  * @since   2.0.0 added
+ * @since   2.0.1 moved to EventableExtensionAbstract
  */
-class Serialize extends CacheExtensionAbstract
+class Serialize extends EventableExtensionAbstract
 {
     /**
      * {@inheritDoc}
@@ -48,7 +50,7 @@ class Serialize extends CacheExtensionAbstract
     /**
      * {@inheritDoc}
      */
-    protected function cacheEvents()/*# : array */
+    protected function extensionHandles()/*# : array */
     {
         return [
             ['event' => CachePool::EVENT_SAVE_BEFORE, 'handler' => ['doSerialize', 50]],

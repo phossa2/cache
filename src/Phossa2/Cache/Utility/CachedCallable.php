@@ -16,7 +16,7 @@ namespace Phossa2\Cache\Utility;
 
 use Phossa2\Cache\CachePool;
 use Phossa2\Cache\CacheItem;
-use Phossa2\Cache\Extension\CacheExtensionAbstract;
+use Phossa2\Shared\Extension\ExtensionAbstract;
 
 /**
  * CachedCallable
@@ -33,13 +33,13 @@ use Phossa2\Cache\Extension\CacheExtensionAbstract;
  *
  * @package Phossa2\Cache
  * @author  Hong Zhang <phossa@126.com>
- * @see     CacheExtensionAbstract
+ * @see     ExtensionAbstract
  * @see     CacheItem
  * @see     CachePool
  * @version 2.0.0
  * @since   2.0.0 added
  */
-class CachedCallable extends CacheExtensionAbstract
+class CachedCallable extends ExtensionAbstract
 {
     /**
      * default ttl for the cached callable result
@@ -94,12 +94,12 @@ class CachedCallable extends CacheExtensionAbstract
     }
 
     /**
-     * {@inheritDoc}
+     * The real boot method
+     *
+     * @access protected
      */
-    protected function cacheEvents()/*# : array */
+    protected function bootExtension()
     {
-        // skip events stuff
-        return [];
     }
 
     /**

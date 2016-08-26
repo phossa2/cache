@@ -14,8 +14,8 @@
     "require": {
         "php": "~5.4|~7.0",
         "psr/cache": "^1.0",
-        "phossa2/shared": "^2.0.25",
-        "phossa2/event": "^2.1.4",
+        "phossa2/shared": "^2.0.27",
+        "phossa2/event": "^2.1.6",
         "phossa2/storage": "^2.0.0"
     },
     "require-dev": {

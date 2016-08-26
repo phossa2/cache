@@ -19,7 +19,6 @@ use Phossa2\Storage\Filesystem;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Phossa2\Storage\Driver\LocalDriver;
-use Phossa2\Event\EventCapableAbstract;
 use Phossa2\Cache\Driver\StorageDriver;
 use Phossa2\Shared\Error\ErrorAwareTrait;
 use Phossa2\Cache\Traits\DriverAwareTrait;
@@ -31,22 +30,23 @@ use Phossa2\Cache\Interfaces\DriverInterface;
 use Phossa2\Cache\Interfaces\DriverAwareInterface;
 use Phossa2\Cache\Interfaces\UtilityAwareInterface;
 use Phossa2\Cache\Interfaces\FallbackAwareInterface;
-use Phossa2\Shared\Extension\ExtensionAwareInterface;
+use Phossa2\Event\EventableExtensionCapableAbstract;
 
 /**
  * CachePool
  *
  * @package Phossa2\Cache
  * @author  Hong Zhang <phossa@126.com>
- * @see     EventCapableAbstract
+ * @see     EventableExtensionCapableAbstrac
  * @see     CacheItemPoolInterface
  * @see     DriverAwareInterface
  * @see     ErrorAwareInterface
  * @version 2.0.1
  * @since   2.0.0 added
  * @since   2.0.1 updated __construct()
+ *                moved to EventableExtensionCapableAbstrac
  */
-class CachePool extends EventCapableAbstract implements CacheItemPoolInterface, DriverAwareInterface, FallbackAwareInterface, ExtensionAwareInterface, UtilityAwareInterface, ErrorAwareInterface
+class CachePool extends EventableExtensionCapableAbstract implements CacheItemPoolInterface, DriverAwareInterface, FallbackAwareInterface, UtilityAwareInterface, ErrorAwareInterface
 {
     use DriverAwareTrait, CacheItemAwareTrait, UtilityAwareTrait, FallbackAwareTrait, ErrorAwareTrait;
 

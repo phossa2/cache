@@ -16,6 +16,7 @@ namespace Phossa2\Cache\Extension;
 
 use Phossa2\Cache\CachePool;
 use Phossa2\Event\Interfaces\EventInterface;
+use Phossa2\Event\EventableExtensionAbstract;
 use Phossa2\Cache\Interfaces\CacheItemExtendedInterface;
 
 /**
@@ -34,10 +35,12 @@ use Phossa2\Cache\Interfaces\CacheItemExtendedInterface;
  *
  * @package Phossa2\Cache
  * @author  Hong Zhang <phossa@126.com>
- * @version 2.0.0
+ * @see     EventableExtensionAbstract
+ * @version 2.0.1
  * @since   2.0.0 added
+ * @since   2.0.1 moved to EventableExtensionAbstract
  */
-class DistributedExpiration extends CacheExtensionAbstract
+class DistributedExpiration extends EventableExtensionAbstract
 {
     /**
      * item expiration time distribution 5% (50/1000)
@@ -58,7 +61,7 @@ class DistributedExpiration extends CacheExtensionAbstract
     /**
      * {@inheritDoc}
      */
-    protected function cacheEvents()/*# : array */
+    protected function extensionHandles()/*# : array */
     {
         // change item expire before save or saveDeferred
         return [

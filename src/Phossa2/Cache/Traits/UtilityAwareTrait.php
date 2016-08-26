@@ -15,7 +15,7 @@
 namespace Phossa2\Cache\Traits;
 
 use Phossa2\Shared\Extension\ExtensionAbstract;
-use Phossa2\Shared\Extension\ExtensionAwareTrait;
+use Phossa2\Shared\Extension\ExtensionInterface;
 use Phossa2\Cache\Interfaces\UtilityAwareInterface;
 
 /**
@@ -29,8 +29,6 @@ use Phossa2\Cache\Interfaces\UtilityAwareInterface;
  */
 trait UtilityAwareTrait
 {
-    use ExtensionAwareTrait;
-
     /**
      * Add utility
      *
@@ -42,4 +40,12 @@ trait UtilityAwareTrait
     {
         return $this->addExtension($util);
     }
+
+    /**
+     * from Phossa2\Shared\Extension\ExtensionAwareInterface
+     */
+    abstract public function addExtension(
+        ExtensionInterface $ext,
+        /*# bool */ $forceOverride = false
+    );
 }

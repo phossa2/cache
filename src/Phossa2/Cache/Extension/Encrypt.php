@@ -17,6 +17,7 @@ namespace Phossa2\Cache\Extension;
 use Phossa2\Cache\CacheItem;
 use Phossa2\Cache\CachePool;
 use Phossa2\Event\Interfaces\EventInterface;
+use Phossa2\Event\EventableExtensionAbstract;
 
 /**
  * Encrypt
@@ -33,10 +34,11 @@ use Phossa2\Event\Interfaces\EventInterface;
  *
  * @package Phossa2\Cache
  * @author  Hong Zhang <phossa@126.com>
- * @version 2.0.0
+ * @version 2.0.1
  * @since   2.0.0 added
+ * @since   2.0.1 moved to EventableExtensionAbstract
  */
-class Encrypt extends CacheExtensionAbstract
+class Encrypt extends EventableExtensionAbstract
 {
     /**
      * @var    callable
@@ -80,7 +82,7 @@ class Encrypt extends CacheExtensionAbstract
     /**
      * {@inheritDoc}
      */
-    protected function cacheEvents()/*# : array */
+    protected function extensionHandles()/*# : array */
     {
         // encrypt after serialize, and decrypt before unserlize
         return [
