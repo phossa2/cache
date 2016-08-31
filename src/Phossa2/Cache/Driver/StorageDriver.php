@@ -75,7 +75,9 @@ class StorageDriver extends DriverAbstract
             $exp = $item->getExpiration()->getTimestamp();
 
             $res = $this->storage->put(
-                $this->getPath($key), (string) $item, ['mtime' => $exp]
+                $this->getPath($key),
+                (string) $item,
+                ['mtime' => $exp]
             );
             return $res ?: $this->resetError();
         }

@@ -109,7 +109,6 @@ trait CacheItemAwareTrait
         if (is_callable($this->item_factory)) {
             $func = $this->item_factory;
             $item = $func($key, $this);
-
         } else {
             $item = new CacheItem($key, $this);
         }

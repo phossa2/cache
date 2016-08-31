@@ -19,13 +19,15 @@
         "phossa2/storage": "^2.0.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.*"
+        "phpunit/phpunit": "4.*",
+        "squizlabs/php_codesniffer": "2.*"
     },
     "autoload": {
         "psr-0": { "Phossa2\\Cache\\": "src/" }
     },
     "scripts": {
         "test": "phpunit",
+        "check": "phpcs --standard=psr2 src/",
         "format": "phpcbf --standard=psr2 src/"
     },
     "provide": {

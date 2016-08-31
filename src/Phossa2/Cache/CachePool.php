@@ -78,7 +78,8 @@ class CachePool extends EventableExtensionCapableAbstract implements CacheItemPo
      * @access public
      * @since  2.0.1 removed eventManager param
      */
-    public function __construct(DriverInterface $driver = null) {
+    public function __construct(DriverInterface $driver = null)
+    {
         // use default driver
         if (is_null($driver)) {
             $driver = new StorageDriver(
@@ -133,7 +134,9 @@ class CachePool extends EventableExtensionCapableAbstract implements CacheItemPo
     public function clear()
     {
         return $this->eventableAction(
-            'clear', self::EVENT_CLEAR_BEFORE, self::EVENT_CLEAR_AFTER
+            'clear',
+            self::EVENT_CLEAR_BEFORE,
+            self::EVENT_CLEAR_AFTER
         );
     }
 
@@ -144,7 +147,10 @@ class CachePool extends EventableExtensionCapableAbstract implements CacheItemPo
     {
         $item = $this->getItem($key);
         return $this->eventableAction(
-            'delete', self::EVENT_DELETE_BEFORE, self::EVENT_DELETE_AFTER, $item
+            'delete',
+            self::EVENT_DELETE_BEFORE,
+            self::EVENT_DELETE_AFTER,
+            $item
         );
     }
 
@@ -167,7 +173,10 @@ class CachePool extends EventableExtensionCapableAbstract implements CacheItemPo
     public function save(CacheItemInterface $item)
     {
         return $this->eventableAction(
-            'save', self::EVENT_SAVE_BEFORE, self::EVENT_SAVE_AFTER, $item
+            'save',
+            self::EVENT_SAVE_BEFORE,
+            self::EVENT_SAVE_AFTER,
+            $item
         );
     }
 
@@ -177,7 +186,10 @@ class CachePool extends EventableExtensionCapableAbstract implements CacheItemPo
     public function saveDeferred(CacheItemInterface $item)
     {
         return $this->eventableAction(
-            'saveDeferred', self::EVENT_DEFER_BEFORE, self::EVENT_DEFER_AFTER, $item
+            'saveDeferred',
+            self::EVENT_DEFER_BEFORE,
+            self::EVENT_DEFER_AFTER,
+            $item
         );
     }
 
@@ -187,7 +199,9 @@ class CachePool extends EventableExtensionCapableAbstract implements CacheItemPo
     public function commit()
     {
         return $this->eventableAction(
-            'commit', self::EVENT_COMMIT_BEFORE, self::EVENT_COMMIT_AFTER
+            'commit',
+            self::EVENT_COMMIT_BEFORE,
+            self::EVENT_COMMIT_AFTER
         );
     }
 
