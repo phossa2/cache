@@ -21,6 +21,8 @@ engines:
         enabled: false
       CleanCode/StaticAccess:
         enabled: false
+      Controversial/CamelCasePropertyName:
+        enabled: false
 ratings:
   paths:
   - "**.js"
