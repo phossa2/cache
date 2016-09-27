@@ -3,7 +3,7 @@
     "license": "MIT",
     "type": "library",
     "description": "A PSR-6 compliant PHP caching library",
-    "keywords": ["cache", "caching", "psr-6", "phossa"],
+    "keywords": ["cache", "caching", "psr-6", "phossa", "phossa2"],
     "homepage": "https://github.com/phossa2/cache",
     "authors": [
         {
@@ -12,7 +12,7 @@
         }
     ],
     "require": {
-        "php": "~5.4|~7.0",
+        "php": "~5.4.0|~7.0.0",
         "psr/cache": "^1.0",
         "phossa2/shared": "^2.0.27",
         "phossa2/event": "^2.1.6",
@@ -23,18 +23,15 @@
         "squizlabs/php_codesniffer": "2.*"
     },
     "autoload": {
-        "psr-0": { "Phossa2\\Cache\\": "src/" }
+        "psr-4": { "Phossa2\\Cache\\": "Cache/" }
     },
     "scripts": {
         "test": "phpunit",
-        "check": "phpcs --standard=psr2 src/",
-        "format": "phpcbf --standard=psr2 src/"
+        "check": "phpcs --standard=psr2 Cache/",
+        "format": "phpcbf --standard=psr2 Cache/"
     },
     "provide": {
         "psr/cache-implementation": "1.0.0"
-    },
-    "replace": {
-        "phossa/phossa-cache": "*"
     },
     "suggest": {
         "psr/log-implementation": "Allows log messages"
@@ -46,7 +43,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.0-dev"
+            "dev-master": "2.1-dev"
         }
     },
     "archive": {
