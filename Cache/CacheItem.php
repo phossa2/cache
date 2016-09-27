@@ -147,7 +147,7 @@ class CacheItem extends ObjectAbstract implements CacheItemExtendedInterface
         if (is_bool($this->hit)) {
             return $this->hit;
         } else {
-            return $this->getHit();
+            return $this->hasHit();
         }
     }
 
@@ -301,7 +301,7 @@ class CacheItem extends ObjectAbstract implements CacheItemExtendedInterface
      * @return bool
      * @access protected
      */
-    protected function getHit()/*# : bool */
+    protected function hasHit()/*# : bool */
     {
         if (!$this->trigger(CachePool::EVENT_HAS_BEFORE)) {
             return $this->setHit(false);

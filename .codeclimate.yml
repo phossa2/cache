@@ -1,7 +1,7 @@
 ---
 engines:
   duplication:
-    enabled: true
+    enabled: false
     config:
       languages:
       - javascript
@@ -22,6 +22,8 @@ engines:
       CleanCode/StaticAccess:
         enabled: false
       Controversial/CamelCasePropertyName:
+        enabled: false
+      Controversial/CamelCaseVariableName:
         enabled: false
 ratings:
   paths:
