@@ -23,12 +23,12 @@
         "squizlabs/php_codesniffer": "2.*"
     },
     "autoload": {
-        "psr-4": { "Phossa2\\Cache\\": "Cache/" }
+        "psr-4": { "Phossa2\\Cache\\": "src/Cache/" }
     },
     "scripts": {
         "test": "phpunit",
-        "check": "phpcs --standard=psr2 Cache/",
-        "format": "phpcbf --standard=psr2 Cache/"
+        "check": "phpcs --standard=psr2 src/",
+        "format": "phpcbf --standard=psr2 src/"
     },
     "provide": {
         "psr/cache-implementation": "1.0.0"
