@@ -1,4 +1,6 @@
-# phossa2/cache
+# phossa2/cache [ABANDONED]
+Please use [phoole/cache](https://github.com/phoole/cache) instead.
+
 [![Build Status](https://travis-ci.org/phossa2/cache.svg?branch=master)](https://travis-ci.org/phossa2/cache)
 [![Code Quality](https://scrutinizer-ci.com/g/phossa2/cache/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/phossa2/cache/)
 [![Code Climate](https://codeclimate.com/github/phossa2/cache/badges/gpa.svg)](https://codeclimate.com/github/phossa2/cache)
